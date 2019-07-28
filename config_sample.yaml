@@ -1,0 +1,12 @@
+# The bot token
+TOKEN: "835111842:AAHh3op8TJcpCBV2w0GblN63ncOqHVpSPE0"
+
+# The proxy server
+PROXY_SERVER: "https://185.37.168.42:44958"
+
+MESSAGES:
+  start: |
+    Hi %s!
+    Please click one of the links to see how i can help you:
+
+    /about - about me
