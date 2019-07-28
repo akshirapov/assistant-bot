@@ -13,9 +13,11 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s: [%(levelname)s] "%(name)s" -> %(message)s')
+
 logger = logging.getLogger()
 logger.info("Running " + sys.argv[0])
 
+# Set up setting
 logger.info("Load setting from config file")
 with open('config.yaml') as stream:
     config = yaml.load(stream, Loader=yaml.FullLoader)
@@ -33,7 +35,7 @@ def start(update, context):
     username = update.message.chat.first_name
     text = MESSAGES['start'] % username
 
-    logger.info(username + ': /start')
+    logger.info(f'handler: start; username: {username}')
     context.bot.send_message(chat_id=chat_id, text=text)
 
 
@@ -42,7 +44,7 @@ def unknown(update, context):
     username = update.message.chat.first_name
     text = MESSAGES['unknown']
 
-    logging.info(username + ': unknown')
+    logger.info(f'handler: unknown; username: {username}')
     context.bot.send_message(chat_id=chat_id, text=text)
 
 
