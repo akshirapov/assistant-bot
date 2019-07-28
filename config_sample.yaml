@@ -7,6 +7,10 @@ PROXY_SERVER: "https://185.37.168.42:44958"
 MESSAGES:
   start: |
     Hi %s!
-    Please click one of the links to see how i can help you:
+    You can control me by sending these commands:
 
     /about - about me
+    /weather - get weather
+
+  unknown: |
+    Invalid command. Try again.

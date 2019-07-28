@@ -9,7 +9,7 @@ import sys
 import pprint
 import yaml
 
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s: [%(levelname)s] "%(name)s" -> %(message)s')
@@ -22,7 +22,10 @@ with open('config.yaml') as stream:
 
 TOKEN = config['TOKEN']
 REQUEST_KWARGS = {'proxy_url': config['PROXY_SERVER']}
-MESSAGES = {'start': config['MESSAGES']['start']}
+MESSAGES = {
+    'start': config['MESSAGES']['start'],
+    'unknown': config['MESSAGES']['unknown']
+}
 
 
 def start(update, context):
@@ -30,7 +33,16 @@ def start(update, context):
     username = update.message.chat.first_name
     text = MESSAGES['start'] % username
 
-    logger.info('/start - ' + username)
+    logger.info(username + ': /start')
+    context.bot.send_message(chat_id=chat_id, text=text)
+
+
+def unknown(update, context):
+    chat_id = update.message.chat.id
+    username = update.message.chat.first_name
+    text = MESSAGES['unknown']
+
+    logging.info(username + ': unknown')
     context.bot.send_message(chat_id=chat_id, text=text)
 
 
@@ -40,6 +52,7 @@ updater = Updater(token=TOKEN, request_kwargs=REQUEST_KWARGS, use_context=True)
 dispatcher = updater.dispatcher
 
 dispatcher.add_handler(CommandHandler('start', start))
+dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
 logger.info("Starting polling")
 updater.start_polling()
