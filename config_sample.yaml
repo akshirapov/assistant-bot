@@ -11,7 +11,9 @@ PROXY:
 # Message templates
 MESSAGES:
   start: |
-    Hi %s!
+    Hi, %s! I'm a Family Assistant.
+    I can help you get some information.
+
     You can control me by sending these commands:
 
     /weather - get weather
