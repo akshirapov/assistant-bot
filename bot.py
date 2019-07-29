@@ -7,6 +7,8 @@ Assistant Bot to send some services.
 import logging
 import sys
 import yaml
+import requests
+import bs4
 
 from telegram import ChatAction
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -47,6 +49,17 @@ def send_typing_action(func):
     return command_func
 
 
+def get_weather():
+    url = 'https://www.gismeteo.ru/weather-irkutsk-4787/now/'
+
+    response = requests.get(url, headers={"User-Agent": "Firefox/68.0"})
+    response.raise_for_status()
+
+    soup = bs4.BeautifulSoup(response.text, features="html.parser")
+    el = soup.select('span.nowvalue__text_l')
+    return el[0].text
+
+
 @send_typing_action
 def start(update, context):
     chat_id = update.message.chat.id
@@ -71,7 +84,7 @@ def unknown(update, context):
 def weather(update, context):
     chat_id = update.message.chat.id
     username = update.message.chat.first_name
-    text = "Weather"
+    text = get_weather()
 
     logger.info(f'handler: weather; username: {username}')
     context.bot.send_message(chat_id=chat_id, text=text)
