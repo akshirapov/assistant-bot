@@ -52,13 +52,25 @@ def unknown(update, context):
     context.bot.send_message(chat_id=chat_id, text=text)
 
 
+def weather(update, context):
+    chat_id = update.message.chat.id
+    username = update.message.chat.first_name
+    text = "Weather"
+
+    logger.info(f'handler: weather; username: {username}')
+    context.bot.send_message(chat_id=chat_id, text=text)
+
+
 # Handlers
 logger.info("Setting handlers")
 updater = Updater(token=TOKEN, request_kwargs=REQUEST_KWARGS, use_context=True)
 dispatcher = updater.dispatcher
 
 dispatcher.add_handler(CommandHandler('start', start))
+dispatcher.add_handler(CommandHandler('weather', weather))
+
 dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
 logger.info("Starting polling")
 updater.start_polling()
+updater.idle()
