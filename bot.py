@@ -23,7 +23,11 @@ with open('config.yaml') as stream:
     config = yaml.load(stream, Loader=yaml.FullLoader)
 
 TOKEN = config['TOKEN']
-REQUEST_KWARGS = {'proxy_url': config['PROXY_SERVER']}
+
+REQUEST_KWARGS = {
+    'proxy_url': config['PROXY']['url'],
+}
+
 MESSAGES = {
     'start': config['MESSAGES']['start'],
     'unknown': config['MESSAGES']['unknown']
