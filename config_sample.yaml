@@ -14,8 +14,7 @@ MESSAGES:
     Hi %s!
     You can control me by sending these commands:
 
-    /about - about me
     /weather - get weather
 
   unknown: |
-    Invalid command. Try again.
+    Sorry, I didn't understand that command.
