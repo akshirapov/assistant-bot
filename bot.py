@@ -6,10 +6,12 @@ Assistant Bot to send some services.
 
 import logging
 import sys
-import pprint
 import yaml
 
+from telegram import ChatAction
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from functools import wraps
+
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s: [%(levelname)s] "%(name)s" -> %(message)s')
@@ -34,6 +36,18 @@ MESSAGES = {
 }
 
 
+def send_typing_action(func):
+    """Sends typing action while processing func command."""
+
+    @wraps(func)
+    def command_func(update, context, *args, **kwargs):
+        context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
+        return func(update, context,  *args, **kwargs)
+
+    return command_func
+
+
+@send_typing_action
 def start(update, context):
     chat_id = update.message.chat.id
     username = update.message.chat.first_name
@@ -43,6 +57,7 @@ def start(update, context):
     context.bot.send_message(chat_id=chat_id, text=text)
 
 
+@send_typing_action
 def unknown(update, context):
     chat_id = update.message.chat.id
     username = update.message.chat.first_name
@@ -52,6 +67,7 @@ def unknown(update, context):
     context.bot.send_message(chat_id=chat_id, text=text)
 
 
+@send_typing_action
 def weather(update, context):
     chat_id = update.message.chat.id
     username = update.message.chat.first_name
