@@ -15,26 +15,26 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from functools import wraps
 
 
+# Logging
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s: [%(levelname)s] "%(name)s" -> %(message)s')
 
 logger = logging.getLogger()
 logger.info("Running " + sys.argv[0])
 
-# Set up setting
+
+# Setting from config file
 logger.info("Load setting from config file")
 with open('config.yaml', 'rt', encoding='utf-8') as stream:
     config = yaml.load(stream, Loader=yaml.FullLoader)
 
 TOKEN = config['TOKEN']
-
 REQUEST_KWARGS = {
     'proxy_url': config['PROXY']['url'],
 }
-
 MESSAGES = {
     'start': config['MESSAGES']['RU']['start'],
-    'unknown': config['MESSAGES']['RU']['unknown']
+    'unknown': config['MESSAGES']['RU']['unknown'],
 }
 
 
