@@ -23,7 +23,7 @@ logger.info("Running " + sys.argv[0])
 
 # Set up setting
 logger.info("Load setting from config file")
-with open('config.yaml') as stream:
+with open('config.yaml', 'rt', encoding='utf-8') as stream:
     config = yaml.load(stream, Loader=yaml.FullLoader)
 
 TOKEN = config['TOKEN']
@@ -33,8 +33,8 @@ REQUEST_KWARGS = {
 }
 
 MESSAGES = {
-    'start': config['MESSAGES']['start'],
-    'unknown': config['MESSAGES']['unknown']
+    'start': config['MESSAGES']['RU']['start'],
+    'unknown': config['MESSAGES']['RU']['unknown']
 }
 
 
