@@ -13,7 +13,7 @@ import bs4
 from telegram import ChatAction
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from functools import wraps
-
+from pprint import pprint
 
 # Logging
 logging.basicConfig(level=logging.INFO,
@@ -51,15 +51,34 @@ def send_typing_action(func):
 
 
 def get_weather():
+
+    # TODO: put in a separate module
+    # TODO: reformat function. DRY. Class?
+
+    # Now
     url = 'https://www.gismeteo.ru/weather-irkutsk-4787/now/'
 
     response = requests.get(url, headers={"User-Agent": "Firefox/68.0"})
     response.raise_for_status()
 
     soup = bs4.BeautifulSoup(response.text, features="html.parser")
-    el = soup.select('span.nowvalue__text_l')
+    tag = soup.select('span.nowvalue__text_l')
 
-    return MESSAGES['weather'] % el[0].text
+    curr_t = tag[0].text
+
+    # Today
+    url = 'https://www.gismeteo.ru/weather-irkutsk-4787/'
+
+    response = requests.get(url, headers={"User-Agent": "Firefox/68.0"})
+    response.raise_for_status()
+
+    soup = bs4.BeautifulSoup(response.text, features="html.parser")
+    tag = soup.select('div.tab.tooltip span.unit.unit_temperature_c')
+
+    from_t = tag[0].text
+    to_t = tag[1].text
+
+    return MESSAGES['weather'] % (curr_t, from_t, to_t)
 
 
 @send_typing_action
