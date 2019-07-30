@@ -35,6 +35,7 @@ REQUEST_KWARGS = {
 MESSAGES = {
     'start': config['MESSAGES']['RU']['start'],
     'unknown': config['MESSAGES']['RU']['unknown'],
+    'weather': config['MESSAGES']['RU']['weather']
 }
 
 
@@ -57,7 +58,8 @@ def get_weather():
 
     soup = bs4.BeautifulSoup(response.text, features="html.parser")
     el = soup.select('span.nowvalue__text_l')
-    return el[0].text
+
+    return MESSAGES['weather'] % el[0].text
 
 
 @send_typing_action
