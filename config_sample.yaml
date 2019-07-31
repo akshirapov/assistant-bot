@@ -10,34 +10,20 @@ PROXY:
 
 # Message templates
 MESSAGES:
-  EN:
-    start: |
-      Hi, %s!
-      I am your family assistant.
+  start: |
+    Привет, %s!
+    Я - ваш семейный помощник.
 
-      I can help you get some information.
+    Ты можешь управлять мной с помощью этих команд:
 
-      You can control me by sending these commands:
+    /weather - узнать погоду
 
-      /weather - get weather
+  unknown: |
+    Извини, я не знаю эту команду.
 
-    unknown: |
-      Sorry, I didn't understand that command.
+  weather: |
+    Погода в Иркутске:
 
-  RU:
-    start: |
-      Привет, %s!
-      Я - ваш семейный помощник.
-
-      Ты можешь управлять мной с помощью этих команд:
-
-      /weather - узнать погоду
-
-    unknown: |
-      Извини, я не знаю эту команду.
-
-    weather: |
-      Погода в Иркутске:
-
-      Сейчас:  %s
-      Сегодня: %s...%s
+    Сейчас:  %s (%s)
+    Сегодня: %s...%s
+    Завтра:  %s...%s
