@@ -7,13 +7,12 @@ Assistant Bot to send some services.
 import logging
 import sys
 import yaml
-import requests
-import bs4
 
 from telegram import ChatAction
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from functools import wraps
 from pprint import pprint
+from weather import Gismeteo
 
 # Logging
 logging.basicConfig(level=logging.INFO,
@@ -30,12 +29,12 @@ with open('config.yaml', 'rt', encoding='utf-8') as stream:
 
 TOKEN = config['TOKEN']
 REQUEST_KWARGS = {
-    'proxy_url': config['PROXY']['url'],
+    'proxy_url': config['PROXY']['url']
 }
 MESSAGES = {
-    'start': config['MESSAGES']['RU']['start'],
-    'unknown': config['MESSAGES']['RU']['unknown'],
-    'weather': config['MESSAGES']['RU']['weather']
+    'start': config['MESSAGES']['start'],
+    'unknown': config['MESSAGES']['unknown'],
+    'weather': config['MESSAGES']['weather']
 }
 
 
@@ -52,33 +51,10 @@ def send_typing_action(func):
 
 def get_weather():
 
-    # TODO: put in a separate module
-    # TODO: reformat function. DRY. Class?
+    g = Gismeteo()
+    t = g.now + g.today + g.tomorrow
 
-    # Now
-    url = 'https://www.gismeteo.ru/weather-irkutsk-4787/now/'
-
-    response = requests.get(url, headers={"User-Agent": "Firefox/68.0"})
-    response.raise_for_status()
-
-    soup = bs4.BeautifulSoup(response.text, features="html.parser")
-    tag = soup.select('span.nowvalue__text_l')
-
-    curr_t = tag[0].text
-
-    # Today
-    url = 'https://www.gismeteo.ru/weather-irkutsk-4787/'
-
-    response = requests.get(url, headers={"User-Agent": "Firefox/68.0"})
-    response.raise_for_status()
-
-    soup = bs4.BeautifulSoup(response.text, features="html.parser")
-    tag = soup.select('div.tab.tooltip span.unit.unit_temperature_c')
-
-    from_t = tag[0].text
-    to_t = tag[1].text
-
-    return MESSAGES['weather'] % (curr_t, from_t, to_t)
+    return MESSAGES['weather'] % t
 
 
 @send_typing_action
