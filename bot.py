@@ -8,14 +8,12 @@ import telegram
 import logging
 import sys
 import yaml
-import datetime
-import pytz
 
 from telegram import ChatAction
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from functools import wraps
-from pprint import pprint
 from weather import Gismeteo
+from datetime import time
 
 # Logging
 logging.basicConfig(level=logging.INFO,
@@ -113,8 +111,8 @@ dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('weather', weather))
 dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
-time = datetime.time(8, 30, tzinfo=pytz.timezone('Asia/Irkutsk'))
-job_weather_daily = j.run_daily(weather_daily, time)
+next_t = time(9)  # at 9:00am
+job_weather_daily = j.run_daily(weather_daily, time=next_t)
 
 
 logger.info("Starting polling")
