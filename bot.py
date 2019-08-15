@@ -74,10 +74,10 @@ def weather_daily(context: telegram.ext.CallbackContext):
 def start(update, context):
     chat_id = update.message.chat.id
     username = update.message.chat.first_name
-    text = MESSAGES['start'] % username
+    text = MESSAGES['start']
 
     logger.info(f'handler: start; username: {username}')
-    context.bot.send_message(chat_id=chat_id, text=text)
+    context.bot.send_message(chat_id=chat_id, text=text, parse_mode=telegram.ParseMode.MARKDOWN)
 
 
 @send_typing_action
