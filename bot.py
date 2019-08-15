@@ -4,9 +4,12 @@
 Assistant Bot to send some services.
 """
 
+import telegram
 import logging
 import sys
 import yaml
+import datetime
+import pytz
 
 from telegram import ChatAction
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -58,6 +61,18 @@ def get_weather():
 
 
 @send_typing_action
+def weather_daily(context: telegram.ext.CallbackContext):
+
+    chat_id_ls = ['312042633', '340851588']
+    weather_info = get_weather()
+
+    for chat_id in chat_id_ls:
+        context.bot.send_message(chat_id=chat_id,
+                                 text=weather_info)
+        logger.info('Send weather to %s' % chat_id)
+
+
+@send_typing_action
 def start(update, context):
     chat_id = update.message.chat.id
     username = update.message.chat.first_name
@@ -84,18 +99,23 @@ def weather(update, context):
     text = get_weather()
 
     logger.info(f'handler: weather; username: {username}')
+
     context.bot.send_message(chat_id=chat_id, text=text)
 
 
-# Handlers
+#
 logger.info("Setting handlers")
 updater = Updater(token=TOKEN, request_kwargs=REQUEST_KWARGS, use_context=True)
 dispatcher = updater.dispatcher
+j = updater.job_queue
 
 dispatcher.add_handler(CommandHandler('start', start))
 dispatcher.add_handler(CommandHandler('weather', weather))
-
 dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+
+time = datetime.time(8, 30, tzinfo=pytz.timezone('Asia/Irkutsk'))
+job_weather_daily = j.run_daily(weather_daily, time)
+
 
 logger.info("Starting polling")
 updater.start_polling()
