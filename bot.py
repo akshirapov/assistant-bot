@@ -58,7 +58,6 @@ def get_weather():
     return MESSAGES['weather'] % t
 
 
-@send_typing_action
 def weather_daily(context: telegram.ext.CallbackContext):
 
     chat_id_ls = ['312042633', '340851588']
